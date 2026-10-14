@@ -8,14 +8,18 @@ function App() {
 
   //Add Task
   const handleAddTask = () => {
+    //If the input is empty, the function stops immediately.
+    // This makes the rest of the handler easier to read.
+    if (!input.trim()) return;
+
     let newTask: Task = {
       id: Date.now(),
       title: input,
       completed: false,
       createdAt: Date.now(),
     };
-    //check if there is a whitespace or not then add the task
-    if (input.trim()) setTasks((prevTasks) => [...prevTasks, newTask]);
+
+    setTasks((prevTasks) => [...prevTasks, newTask]);
 
     setInput('');
   };
@@ -33,13 +37,12 @@ function App() {
           onChange={(e) => setInput(e.target.value)}
           placeholder='What needs to be done?'
         />
-        <button onClick={handleAddTask}>Add task</button>
+        <button className='addBtn' onClick={handleAddTask}>Add task</button>
       </section>
       <section className='taskList'>
-        📃
         <ul>
           {tasks.map((t) => (
-            <li>{t.title}</li>
+            <li key={t.id}>{t.title}</li>
           ))}
         </ul>
       </section>
