@@ -24,14 +24,14 @@ h6 {
   padding: 15px;
 }
 
-.taskInput{
+.taskInput {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
 }
 
-input{
+input {
   width: 70%;
   padding: 15px 20px;
   margin-top: 10px;
@@ -44,19 +44,33 @@ input{
   font-size: 15px;
 }
 
-.addBtn{
+.addBtn {
   width: 15%;
   padding: 15px;
   background-color: transparent;
   color: #7dd87d;
   border: 1px solid #7dd87d;
   border-radius: 15px;
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
-.addBtn:hover{
+.addBtn:hover {
   cursor: pointer;
   color: #37f737;
   border: 1px solid #37f737;
 }
 
+.taskCompleted {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.deleteBtn{
+  background: transparent;
+  border: none;
+  transition: all .1s ease-in-out;
+}
+.deleteBtn:hover{
+  cursor: pointer;
+  opacity: .5;
+}

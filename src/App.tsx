@@ -12,7 +12,7 @@ function App() {
     // This makes the rest of the handler easier to read.
     if (!input.trim()) return;
 
-    let newTask: Task = {
+    const newTask: Task = {
       id: Date.now(),
       title: input,
       completed: false,
@@ -24,6 +24,17 @@ function App() {
     setInput('');
   };
 
+  const handleToggle = (targetId: number) => {
+    setTasks((prevTask) =>
+      prevTask.map((task) =>
+        task.id === targetId ? { ...task, completed: !task.completed } : task,
+      ),
+    );
+  };
+
+  const handleDelete = (id: number) => {
+    setTasks((prev) => prev.filter((t) => t.id !== id));
+  };
   return (
     <>
       <header>
@@ -37,12 +48,26 @@ function App() {
           onChange={(e) => setInput(e.target.value)}
           placeholder='What needs to be done?'
         />
-        <button className='addBtn' onClick={handleAddTask}>Add task</button>
+        <button className='addBtn' onClick={handleAddTask}>
+          Add task
+        </button>
       </section>
       <section className='taskList'>
         <ul>
           {tasks.map((t) => (
-            <li key={t.id}>{t.title}</li>
+            <li key={t.id}>
+              <input
+                type='checkbox'
+                checked={t.completed}
+                onChange={() => handleToggle(t.id)}
+              />
+              <span className={t.completed ? 'taskCompleted' : ''}>
+                {t.title}
+              </span>
+              <button className='deleteBtn' onClick={() => handleDelete(t.id)}>
+                🗑️
+              </button>
+            </li>
           ))}
         </ul>
       </section>
