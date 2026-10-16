@@ -3,10 +3,13 @@ import type { Task } from './types/task';
 import './App.css';
 
 function App() {
+  type Filter = 'all' | 'active' | 'completed';
+
   const [tasks, setTasks] = useState<Task[]>([]);
   const [input, setInput] = useState('');
+  const [filter, setFilter] = useState<Filter>('all');
 
-  //Add Task
+  //Handling the Add Task Button
   const handleAddTask = () => {
     //If the input is empty, the function stops immediately.
     // This makes the rest of the handler easier to read.
@@ -14,7 +17,7 @@ function App() {
 
     const newTask: Task = {
       id: Date.now(),
-      title: input,
+      title: input.trim(),
       completed: false,
       createdAt: Date.now(),
     };
@@ -24,6 +27,7 @@ function App() {
     setInput('');
   };
 
+  //Handling the completed button
   const handleToggle = (targetId: number) => {
     setTasks((prevTask) =>
       prevTask.map((task) =>
@@ -32,9 +36,18 @@ function App() {
     );
   };
 
+  //Handling the Delete Button
   const handleDelete = (id: number) => {
     setTasks((prev) => prev.filter((t) => t.id !== id));
   };
+
+  //Handling the Filtering
+  const visibleTasks = tasks.filter((t) => {
+    if (filter === 'active') return !t.completed;
+    if (filter === 'completed') return t.completed;
+    return true;
+  });
+
   return (
     <>
       <header>
@@ -52,25 +65,42 @@ function App() {
           Add task
         </button>
       </section>
-      <section className='taskList'>
-        <ul>
-          {tasks.map((t) => (
-            <li key={t.id}>
-              <input
-                type='checkbox'
-                checked={t.completed}
-                onChange={() => handleToggle(t.id)}
-              />
-              <span className={t.completed ? 'taskCompleted' : ''}>
-                {t.title}
-              </span>
-              <button className='deleteBtn' onClick={() => handleDelete(t.id)}>
-                🗑️
-              </button>
-            </li>
-          ))}
-        </ul>
-      </section>
+      {tasks.length > 0 ? (
+        <>
+          <select
+            value={filter}
+            onChange={(e) => setFilter(e.target.value as Filter)}
+          >
+            <option value='all'>All</option>
+            <option value='active'>Activd</option>
+            <option value='completed'>Completed</option>
+          </select>
+          <section className='taskList'>
+            <ul>
+              {visibleTasks.map((t) => (
+                <li key={t.id}>
+                  <input
+                    type='checkbox'
+                    checked={t.completed}
+                    onChange={() => handleToggle(t.id)}
+                  />
+                  <span className={t.completed ? 'taskCompleted' : ''}>
+                    {t.title}
+                  </span>
+                  <button
+                    className='deleteBtn'
+                    onClick={() => handleDelete(t.id)}
+                  >
+                    🗑️
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </section>
+        </>
+      ) : (
+        'There is no task to be done!'
+      )}
     </>
   );
 }
