@@ -7,7 +7,7 @@ interface TaskItemProps {
 }
 const TaskItem = (props: TaskItemProps) => {
   return (
-    <li key={props.task.id}>
+    <li>
       <input
         type='checkbox'
         checked={props.task.completed}
