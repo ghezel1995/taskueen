@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Task } from './types/task';
-import TaskItem from './components/taskItem';
+import TaskList from './components/TaskList';
 import './App.css';
 
 type Filter = 'all' | 'active' | 'completed';
@@ -76,16 +76,11 @@ function App() {
             <option value='completed'>Completed</option>
           </select>
           <section className='taskList'>
-            <ul>
-              {visibleTasks.map((t) => (
-                <TaskItem
-                  key={t.id}
-                  task={t}
-                  onToggle={handleToggle}
-                  onDelete={handleDelete}
-                />
-              ))}
-            </ul>
+            <TaskList
+              tasks={visibleTasks}
+              onToggle={handleToggle}
+              onDelete={handleDelete}
+            />
           </section>
         </>
       ) : (
