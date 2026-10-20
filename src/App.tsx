@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import type { Task } from './types/task';
+import TaskItem from './components/taskItem';
 import './App.css';
 
+type Filter = 'all' | 'active' | 'completed';
 function App() {
-  type Filter = 'all' | 'active' | 'completed';
-
   const [tasks, setTasks] = useState<Task[]>([]);
   const [input, setInput] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
@@ -43,8 +43,8 @@ function App() {
 
   //Handling the Filtering
   const visibleTasks = tasks.filter((t) => {
-    if (filter === 'active') return !t.completed;
-    if (filter === 'completed') return t.completed;
+    if (filter === 'active') return !t.completed; //If completed is false
+    if (filter === 'completed') return t.completed; //If completed is true
     return true;
   });
 
@@ -72,28 +72,18 @@ function App() {
             onChange={(e) => setFilter(e.target.value as Filter)}
           >
             <option value='all'>All</option>
-            <option value='active'>Activd</option>
+            <option value='active'>Active</option>
             <option value='completed'>Completed</option>
           </select>
           <section className='taskList'>
             <ul>
               {visibleTasks.map((t) => (
-                <li key={t.id}>
-                  <input
-                    type='checkbox'
-                    checked={t.completed}
-                    onChange={() => handleToggle(t.id)}
-                  />
-                  <span className={t.completed ? 'taskCompleted' : ''}>
-                    {t.title}
-                  </span>
-                  <button
-                    className='deleteBtn'
-                    onClick={() => handleDelete(t.id)}
-                  >
-                    🗑️
-                  </button>
-                </li>
+                <TaskItem
+                  key={t.id}
+                  task={t}
+                  onToggle={handleToggle}
+                  onDelete={handleDelete}
+                />
               ))}
             </ul>
           </section>
