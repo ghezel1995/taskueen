@@ -6,7 +6,7 @@ interface TaskListProps {
   onToggle: (id: number) => void;
   onDelete: (id: number) => void;
 }
-
+//component composition
 const TaskList = (props: TaskListProps) => {
   return (
     <ul>
