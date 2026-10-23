@@ -1,13 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TaskList from './components/TaskList';
 import useTasks from './hooks/useTasks';
 import './App.css';
 
 type Filter = 'all' | 'active' | 'completed';
+type Theme = 'light' | 'dark';
+
 function App() {
   const [input, setInput] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
+  const [theme, setTheme] = useState<Theme>(() =>
+    localStorage.getItem('taskueen-theme') === 'dark' ? 'dark' : 'light',
+  );
   const { tasks, handleAddTask, handleToggle, handleDelete } = useTasks();
+
+  useEffect(() => {
+  document.documentElement.dataset.theme = theme; // <html data-theme="dark">
+  localStorage.setItem('taskueen-theme', theme);
+}, [theme]);
 
   //Handling the Filtering
   const visibleTasks = tasks.filter((t) => {
@@ -18,11 +28,21 @@ function App() {
 
   return (
     <>
+      <button
+        className='themeToggle'
+        onClick={() => setTheme((t) => (t === 'light' ? 'dark' : 'light'))}
+        aria-label={
+          theme === 'light' ? 'Switch to dark theme' : 'Switch to light theme'
+        }
+        title={theme === 'light' ? 'Dark mode' : 'Light mode'}
+      >
+        <span key={theme}>{theme === 'light' ? '🌙' : '☀️'}</span>
+      </button>
       <header>
         <h1>👑 Taskueen</h1>
         <h6>Rule your day, one task at a time!</h6>
       </header>
-      
+
       <section className='taskInput'>
         <input
           type='text'

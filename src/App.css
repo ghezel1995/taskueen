@@ -1,11 +1,11 @@
 /* ---------- 1. VARIABLES (tweak the whole theme here) ---------- */
 :root {
   /* Core palette */
-  --bg: #f1e8fb;            /* soft lilac-cream base */
-  --text: #9464ec;          /* deep plum text (readable on pastel glass) */
-  --on-accent: #119854;     /* text color on green buttons */
-  --green: #8fe3a8;         /* pastel green accent */
-  --green-bright: #4fe08a;  /* glow / completed accent */
+  --bg: #f1e8fb; /* soft lilac-cream base */
+  --text: #4a3d63; /* deep plum text (readable on pastel glass) */
+  --on-accent: #1f4d36; /* text color on green buttons */
+  --green: #8fe3a8; /* pastel green accent */
+  --green-bright: #4fe08a; /* glow / completed accent */
 
   /* Delete button: smooth pink / red */
   --pink: #ffb6cc;
@@ -18,18 +18,45 @@
   --mint: #aaf0d4;
 
   /* Glass recipe */
-  --glass-bg: rgba(255, 255, 255, 0.5);               /* 50% opacity white glass */
+  --glass-bg: rgba(255, 255, 255, 0.5); /* 50% opacity white glass */
   --glass-border: rgba(255, 255, 255, 0.75);
   --glass-blur: 18px;
   --glass-highlight: inset 0 1px 1px rgba(255, 255, 255, 0.67);
   --glass-shadow: 0 18px 50px rgba(120, 90, 160, 0.22);
+  --shadow-rgb: 120, 90, 160; /* soft shadow tint */
+
+  /* Theme-dependent bits (all swapped in the dark block below) */
+  --hi-soft: rgba(255, 255, 255, 0.72); /* bubble inner highlight */
+  --hi-strong: rgba(255, 255, 255, 0.96); /* bubble highlight on hover */
+  --bubble-hi: rgba(255, 255, 255, 0.75); /* glossy spot on bubbles */
+  --bubble-hi-done: rgba(255, 255, 255, 0.65);
+  --bubble-edge: rgba(255, 255, 255, 0.48); /* bubble border */
+  --tint-a: 32%; /* bubble pastel tint (aqua) */
+  --tint-b: 28%; /* bubble pastel tint (lilac) */
+  --panel-a: 20%; /* list panel tint (aqua) */
+  --panel-b: 16%; /* list panel tint (lilac) */
+  --field-focus-bg: rgba(255, 255, 255, 0.78);
+  --empty-bg: rgba(255, 255, 255, 0.4);
+  --option-bg: #ffffff;
+  --check-color: #ffffff;
+  --orb-opacity: 1; /* background orb strength */
+  --orb-blend: normal;
+  --h1-gradient: linear-gradient(
+    110deg,
+    #aa72fd 0%,
+    #81e2f1 25%,
+    #ff7ec1 50%,
+    #98ffc6 75%,
+    #692dc4 100%
+  );
+  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1.5l6 6 6-6' fill='none' stroke='%234a3d63' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 
   /* Motion */
   --ease-soft: 0.4s ease;
   --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
   --enter-duration: 0.8s;
-  --exit-duration: 0.45s;   /* keep in sync with the setTimeout in useTasks */
-  --task-height: 5.5rem;    /* roughly one task's height, used for the collapse on delete */
+  --exit-duration: 0.45s; /* keep in sync with the setTimeout in useTasks */
+  --task-height: 5.5rem; /* roughly one task's height, used for the collapse on delete */
 
   /* Per-task hover glow (cycled by nth-child below) */
   --glow: var(--aqua);
@@ -38,6 +65,51 @@
   --radius-pill: 999px;
 }
 
+/* ---------- 1b. DARK THEME (applied when <html data-theme="dark">) ---------- */
+:root[data-theme='dark'] {
+  --bg: #2a2438; /* deep twilight purple */
+  --text: #feffdf; /* soft cream */
+  --green: #7dd87d;
+  --green-bright: #37f737;
+  --pink: #ff9db8;
+  --rose: #ff7f9c;
+
+  --aqua: #9be7f2;
+  --lilac: #c3a8f5;
+  --peach: #ffc6a5;
+  --mint: #a8f0d0;
+
+  --glass-bg: rgba(42, 36, 56, 0.5);
+  --glass-border: rgba(254, 255, 223, 0.18);
+  --glass-highlight: inset 0 1px 1px rgba(254, 255, 223, 0.28);
+  --glass-shadow: 0 18px 50px rgba(15, 3, 45, 0.45);
+  --shadow-rgb: 10, 6, 20;
+
+  --hi-soft: rgba(57, 6, 244, 0.3);
+  --hi-strong: rgba(227, 223, 255, 0.4);
+  --bubble-hi: rgba(75, 40, 181, 0.22);
+  --bubble-hi-done: rgba(71, 146, 48, 0.18);
+  --bubble-edge: rgba(222, 228, 32, 0.2);
+  --tint-a: 14%;
+  --tint-b: 12%;
+  --panel-a: 8%;
+  --panel-b: 6%;
+  --field-focus-bg: color-mix(in srgb, #100135 62%, transparent);
+  --empty-bg: color-mix(in srgb, #18024a 40%, transparent);
+  --option-bg: #4c4068;
+  --check-color: #33284d;
+  --orb-opacity: 0.62;
+  --orb-blend: screen;
+  --h1-gradient: linear-gradient(
+    110deg,
+    #feffdf 0%,
+    #9be7f2 25%,
+    #c3a8f5 50%,
+    #7dd87d 75%,
+    #feffdf 100%
+  );
+  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1.5l6 6 6-6' fill='none' stroke='%23feffdf' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
 
 /* ---------- 2. BASE & WATERY BACKGROUND ---------- */
 *,
@@ -49,49 +121,87 @@
 html {
   color-scheme: light;
 }
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
 
 body {
-  display: block;            /* cancels Vite's default flex-centering body */
+  display: block; /* cancels Vite's default flex-centering body */
   place-items: initial;
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: "Quicksand", "Nunito", "Segoe UI", system-ui, sans-serif;
+  transition:
+    background-color 0.6s ease,
+    color 0.6s ease;
+  font-family: 'Quicksand', 'Nunito', 'Segoe UI', system-ui, sans-serif;
   line-height: 1.5;
   overflow-x: hidden;
 }
 
 /* Layer 1: big, slow, blurred pastel orbs */
 body::before {
-  content: "";
+  content: '';
   position: fixed;
   inset: -25%;
   z-index: -2;
   pointer-events: none;
   background:
-    radial-gradient(circle at 18% 26%, color-mix(in srgb, var(--aqua) 88%, transparent) 0, transparent 34%),
-    radial-gradient(circle at 78% 18%, color-mix(in srgb, var(--lilac) 80%, transparent) 0, transparent 36%),
-    radial-gradient(circle at 72% 78%, color-mix(in srgb, var(--peach) 60%, transparent) 0, transparent 32%),
-    radial-gradient(circle at 24% 82%, color-mix(in srgb, var(--mint) 72%, transparent) 0, transparent 34%);
+    radial-gradient(
+      circle at 18% 26%,
+      color-mix(in srgb, var(--aqua) 88%, transparent) 0,
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 78% 18%,
+      color-mix(in srgb, var(--lilac) 80%, transparent) 0,
+      transparent 36%
+    ),
+    radial-gradient(
+      circle at 72% 78%,
+      color-mix(in srgb, var(--peach) 60%, transparent) 0,
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 24% 82%,
+      color-mix(in srgb, var(--mint) 72%, transparent) 0,
+      transparent 34%
+    );
   filter: blur(60px);
+  opacity: var(--orb-opacity);
+  transition: opacity 1s ease;
   animation: driftA 32s ease-in-out infinite alternate;
 }
 
 /* Layer 2: smaller orbs drifting the other way, like light through water */
 body::after {
-  content: "";
+  content: '';
   position: fixed;
   inset: -20%;
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(circle at 60% 40%, color-mix(in srgb, var(--mint) 56%, transparent) 0, transparent 22%),
-    radial-gradient(circle at 35% 60%, color-mix(in srgb, var(--lilac) 60%, transparent) 0, transparent 24%),
-    radial-gradient(circle at 85% 55%, color-mix(in srgb, var(--pink) 51%, transparent) 0, transparent 20%);
+    radial-gradient(
+      circle at 60% 40%,
+      color-mix(in srgb, var(--mint) 56%, transparent) 0,
+      transparent 22%
+    ),
+    radial-gradient(
+      circle at 35% 60%,
+      color-mix(in srgb, var(--lilac) 60%, transparent) 0,
+      transparent 24%
+    ),
+    radial-gradient(
+      circle at 85% 55%,
+      color-mix(in srgb, var(--pink) 51%, transparent) 0,
+      transparent 20%
+    );
   filter: blur(70px);
-  mix-blend-mode: normal;
+  mix-blend-mode: var(--orb-blend);
+  opacity: var(--orb-opacity);
+  transition: opacity 1s ease;
   animation: driftB 44s ease-in-out infinite alternate;
 }
 
@@ -107,7 +217,7 @@ body::after {
 
 ::selection {
   background: var(--green);
-  color: var(--text);
+  color: var(--on-accent);
 }
 
 /* Custom thin scrollbar (page + task list) */
@@ -131,7 +241,6 @@ html,
   background: linear-gradient(var(--green), var(--green-bright));
 }
 
-
 /* ---------- 3. HEADER (h1 shimmer, h6 fade-in) ---------- */
 header {
   margin-bottom: 2rem;
@@ -143,20 +252,15 @@ h1 {
   font-size: clamp(2.3rem, 7vw, 3.4rem);
   font-weight: 700;
   letter-spacing: 0.02em;
-  background: linear-gradient(
-    110deg,
-    #6d4aa0 0%,
-    #3f9fc4 25%,
-    #ff87d1 50%,
-    #35b36d 75%,
-    #6d4aa0 100%
-  );
+  background: var(--h1-gradient);
   background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  filter: drop-shadow(0 0 18px color-mix(in srgb, var(--green) 35%, transparent));
+  filter: drop-shadow(
+    0 0 18px color-mix(in srgb, var(--green) 35%, transparent)
+  );
   animation: shimmer 9s linear infinite;
 }
 
@@ -169,6 +273,43 @@ h6 {
   animation: fadeUp 1.4s 0.4s ease both;
 }
 
+/* ---------- 3b. THEME TOGGLE (fixed top-right glass bubble) ---------- */
+.themeToggle {
+  position: fixed;
+  top: 1.1rem;
+  right: 1.1rem;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  font-size: 1.35rem;
+  line-height: 1;
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: 50%;
+  box-shadow:
+    var(--glass-highlight),
+    0 8px 24px rgba(var(--shadow-rgb), 0.2);
+}
+.themeToggle:hover {
+  transform: translateY(-2px) scale(1.08);
+  border-color: color-mix(in srgb, var(--lilac) 80%, transparent);
+  box-shadow:
+    var(--glass-highlight),
+    0 0 24px color-mix(in srgb, var(--lilac) 60%, transparent);
+}
+.themeToggle:active {
+  transform: scale(0.92);
+}
+/* icon spins in whenever the theme changes (the span is re-keyed in React) */
+.themeToggle span {
+  display: block;
+  animation: iconSpin 0.6s var(--ease-elastic);
+}
 
 /* ---------- 4. INPUT + ADD BUTTON ---------- */
 .taskInput {
@@ -177,7 +318,7 @@ h6 {
   margin-bottom: 1.5rem;
 }
 
-input[type="text"] {
+input[type='text'] {
   flex: 1;
   min-width: 0;
   padding: 0.95rem 1.3rem;
@@ -188,20 +329,25 @@ input[type="text"] {
   backdrop-filter: blur(var(--glass-blur));
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-pill);
-  box-shadow: var(--glass-highlight), 0 8px 24px rgba(120, 90, 160, 0.12);
+  box-shadow:
+    var(--glass-highlight),
+    0 8px 24px rgba(var(--shadow-rgb), 0.12);
   outline: none;
-  transition: border-color var(--ease-soft), box-shadow var(--ease-soft),
-    background var(--ease-soft), transform var(--ease-soft);
+  transition:
+    border-color var(--ease-soft),
+    box-shadow var(--ease-soft),
+    background var(--ease-soft),
+    transform var(--ease-soft);
 }
 
-input[type="text"]:hover {
+input[type='text']:hover {
   border-color: color-mix(in srgb, var(--aqua) 55%, transparent);
 }
 
 /* Glowing focus ring */
-input[type="text"]:focus {
+input[type='text']:focus {
   border-color: var(--green);
-  background: rgba(255, 255, 255, 0.78);
+  background: var(--field-focus-bg);
   box-shadow:
     var(--glass-highlight),
     0 0 0 3px color-mix(in srgb, var(--green) 35%, transparent),
@@ -210,12 +356,14 @@ input[type="text"]:focus {
 }
 
 /* Placeholder fades out on focus */
-input[type="text"]::placeholder {
+input[type='text']::placeholder {
   color: color-mix(in srgb, var(--text) 55%, transparent);
   opacity: 1;
-  transition: opacity var(--ease-soft), letter-spacing var(--ease-soft);
+  transition:
+    opacity var(--ease-soft),
+    letter-spacing var(--ease-soft);
 }
-input[type="text"]:focus::placeholder {
+input[type='text']:focus::placeholder {
   opacity: 0;
   letter-spacing: 0.12em;
 }
@@ -225,8 +373,12 @@ button {
   font: inherit;
   cursor: pointer;
   color: var(--text);
-  transition: transform var(--ease-soft), box-shadow var(--ease-soft),
-    background var(--ease-soft), border-color var(--ease-soft), color var(--ease-soft);
+  transition:
+    transform var(--ease-soft),
+    box-shadow var(--ease-soft),
+    background var(--ease-soft),
+    border-color var(--ease-soft),
+    color var(--ease-soft);
 }
 button:focus-visible {
   outline: 2px solid var(--green-bright);
@@ -254,13 +406,18 @@ button:disabled {
 
 /* shine sweep */
 .addBtn::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: -80%;
   width: 50%;
   height: 100%;
-  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.65),
+    transparent
+  );
   transform: skewX(-20deg);
   transition: left 0.7s ease;
 }
@@ -270,13 +427,19 @@ button:disabled {
 
 /* ripple on press */
 .addBtn::after {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.7) 0, transparent 60%);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.7) 0,
+    transparent 60%
+  );
   opacity: 0;
   transform: scale(0);
-  transition: transform 0.5s ease, opacity 0.5s ease;
+  transition:
+    transform 0.5s ease,
+    opacity 0.5s ease;
 }
 .addBtn:active::after {
   opacity: 1;
@@ -294,7 +457,6 @@ button:disabled {
   transform: translateY(0) scale(0.97);
 }
 
-
 /* ---------- 5. CUSTOM SELECT (filter) ---------- */
 select {
   display: block;
@@ -304,8 +466,8 @@ select {
   color: var(--text);
   cursor: pointer;
   background-color: var(--glass-bg);
-  /* cream chevron (the # is %23 inside the data URI) */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1.5l6 6 6-6' fill='none' stroke='%234a3d63' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  /* chevron icon comes from --chevron (theme aware) */
+  background-image: var(--chevron);
   background-repeat: no-repeat;
   background-position: right 1rem center;
   -webkit-appearance: none;
@@ -316,12 +478,17 @@ select {
   border-radius: var(--radius-pill);
   box-shadow: var(--glass-highlight);
   outline: none;
-  transition: border-color var(--ease-soft), box-shadow var(--ease-soft),
-    transform var(--ease-soft), background-color var(--ease-soft);
+  transition:
+    border-color var(--ease-soft),
+    box-shadow var(--ease-soft),
+    transform var(--ease-soft),
+    background-color var(--ease-soft);
 }
 select:hover {
   border-color: color-mix(in srgb, var(--lilac) 70%, transparent);
-  box-shadow: var(--glass-highlight), 0 0 20px color-mix(in srgb, var(--lilac) 40%, transparent);
+  box-shadow:
+    var(--glass-highlight),
+    0 0 20px color-mix(in srgb, var(--lilac) 40%, transparent);
   transform: translateY(-1px);
 }
 select:focus {
@@ -332,10 +499,9 @@ select:focus {
     0 0 22px color-mix(in srgb, var(--green-bright) 35%, transparent);
 }
 select option {
-  background: #ffffff;
+  background: var(--option-bg);
   color: var(--text);
 }
-
 
 /* ---------- 6. FROSTED-GLASS TASK LIST ---------- */
 .taskList {
@@ -343,18 +509,20 @@ select option {
   padding: 1.1rem;
   overflow-y: auto;
   background:
-    linear-gradient(145deg,
-      color-mix(in srgb, var(--aqua) 20%, transparent),
-      color-mix(in srgb, var(--lilac) 16%, transparent)),
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--aqua) var(--panel-a), transparent),
+      color-mix(in srgb, var(--lilac) var(--panel-b), transparent)
+    ),
     var(--glass-bg);
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
   backdrop-filter: blur(var(--glass-blur)) saturate(140%);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   box-shadow:
-    var(--glass-highlight),                       /* top inner highlight */
-    inset 0 -12px 30px rgba(120, 90, 160, 0.12),     /* bottom inner shadow */
-    var(--glass-shadow);                          /* outer shadow */
+    var(--glass-highlight),
+    /* top inner highlight */ inset 0 -12px 30px rgba(var(--shadow-rgb), 0.12),
+    /* bottom inner shadow */ var(--glass-shadow); /* outer shadow */
   animation: fadeUp 0.8s ease both;
 }
 
@@ -364,7 +532,6 @@ select option {
   padding: 0;
   list-style: none;
 }
-
 
 /* ---------- 7. TASK BUBBLES ---------- */
 .taskList li {
@@ -376,36 +543,51 @@ select option {
   margin: 0 0 0.85rem;
   padding: 0.85rem 1.1rem;
   background:
-    radial-gradient(circle at 18% 14%, rgba(255, 255, 255, 0.75), transparent 42%),  /* bubble highlight */
-    linear-gradient(135deg,
-      color-mix(in srgb, var(--aqua) 32%, transparent),
-      color-mix(in srgb, var(--lilac) 28%, transparent));
-  border: 1px solid rgba(255, 255, 255, 0.48);
-  border-radius: 24px 24px 24px 10px;     /* droplet shape */
+    radial-gradient(circle at 18% 14%, var(--bubble-hi), transparent 42%),
+    /* bubble highlight */
+    linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--aqua) var(--tint-a), transparent),
+        color-mix(in srgb, var(--lilac) var(--tint-b), transparent)
+      );
+  border: 1px solid var(--bubble-edge);
+  border-radius: 24px 24px 24px 10px; /* droplet shape */
   box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.72),
-    inset 0 -6px 14px rgba(120, 90, 160, 0.10),
-    0 6px 16px rgba(120, 90, 160, 0.12);
-  transition: transform var(--ease-soft), box-shadow var(--ease-soft),
-    border-color var(--ease-soft), background var(--ease-soft), opacity var(--ease-soft);
+    inset 0 1px 1px var(--hi-soft),
+    inset 0 -6px 14px rgba(var(--shadow-rgb), 0.1),
+    0 6px 16px rgba(var(--shadow-rgb), 0.12);
+  transition:
+    transform var(--ease-soft),
+    box-shadow var(--ease-soft),
+    border-color var(--ease-soft),
+    background var(--ease-soft),
+    opacity var(--ease-soft);
 }
 .taskList li:last-child {
   margin-bottom: 0;
 }
 
 /* Cycle pastel hover glows */
-.taskList li:nth-child(4n + 1) { --glow: var(--aqua); }
-.taskList li:nth-child(4n + 2) { --glow: var(--lilac); }
-.taskList li:nth-child(4n + 3) { --glow: var(--peach); }
-.taskList li:nth-child(4n + 4) { --glow: var(--mint); }
+.taskList li:nth-child(4n + 1) {
+  --glow: var(--aqua);
+}
+.taskList li:nth-child(4n + 2) {
+  --glow: var(--lilac);
+}
+.taskList li:nth-child(4n + 3) {
+  --glow: var(--peach);
+}
+.taskList li:nth-child(4n + 4) {
+  --glow: var(--mint);
+}
 
 /* Gentle hover lift + glow */
 .taskList li:hover {
   transform: translateY(-3px) scale(1.012);
   border-color: color-mix(in srgb, var(--glow) 70%, transparent);
   box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.96),
-    inset 0 -6px 14px rgba(120, 90, 160, 0.09),
+    inset 0 1px 1px var(--hi-strong),
+    inset 0 -6px 14px rgba(var(--shadow-rgb), 0.09),
     0 10px 26px color-mix(in srgb, var(--glow) 38%, transparent);
 }
 
@@ -415,12 +597,16 @@ select option {
   min-width: 0;
   overflow-wrap: anywhere;
   /* strikethrough is a gradient line that grows across the text */
-  background: linear-gradient(var(--green-bright), var(--green-bright)) no-repeat 0 55% / 0% 2px;
-  transition: background-size 0.5s ease, color var(--ease-soft), opacity var(--ease-soft);
+  background: linear-gradient(var(--green-bright), var(--green-bright))
+    no-repeat 0 55% / 0% 2px;
+  transition:
+    background-size 0.5s ease,
+    color var(--ease-soft),
+    opacity var(--ease-soft);
 }
 
 /* Custom checkbox bubble */
-.taskList input[type="checkbox"] {
+.taskList input[type='checkbox'] {
   position: relative;
   flex: none;
   width: 1.6rem;
@@ -430,38 +616,45 @@ select option {
   cursor: pointer;
   -webkit-appearance: none;
   appearance: none;
-  background: radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.4), transparent 55%);
+  background: radial-gradient(
+    circle at 30% 28%,
+    rgba(255, 255, 255, 0.4),
+    transparent 55%
+  );
   border: 2px solid color-mix(in srgb, var(--text) 50%, transparent);
   border-radius: 50%;
-  transition: background var(--ease-soft), border-color var(--ease-soft),
-    box-shadow var(--ease-soft), transform var(--ease-soft);
+  transition:
+    background var(--ease-soft),
+    border-color var(--ease-soft),
+    box-shadow var(--ease-soft),
+    transform var(--ease-soft);
 }
-.taskList input[type="checkbox"]:hover {
+.taskList input[type='checkbox']:hover {
   border-color: var(--green);
   transform: scale(1.1);
 }
-.taskList input[type="checkbox"]:focus-visible {
+.taskList input[type='checkbox']:focus-visible {
   outline: 2px solid var(--green-bright);
   outline-offset: 3px;
 }
-.taskList input[type="checkbox"]::after {
-  content: "";
+.taskList input[type='checkbox']::after {
+  content: '';
   position: absolute;
   top: 46%;
   left: 50%;
   width: 0.35rem;
   height: 0.7rem;
-  border: solid #ffffff;
+  border: solid var(--check-color);
   border-width: 0 2.5px 2.5px 0;
   transform: translate(-50%, -50%) rotate(45deg) scale(0);
   transition: transform 0.45s var(--ease-elastic);
 }
-.taskList input[type="checkbox"]:checked {
+.taskList input[type='checkbox']:checked {
   background: linear-gradient(135deg, var(--green), var(--green-bright));
   border-color: var(--green-bright);
   box-shadow: 0 0 16px color-mix(in srgb, var(--green-bright) 60%, transparent);
 }
-.taskList input[type="checkbox"]:checked::after {
+.taskList input[type='checkbox']:checked::after {
   transform: translate(-50%, -50%) rotate(45deg) scale(1);
 }
 
@@ -493,13 +686,15 @@ select option {
 /* ----- Completed state: add class "task-done" to the <li> ----- */
 .taskList li.task-done {
   background:
-    radial-gradient(circle at 18% 14%, rgba(255, 255, 255, 0.65), transparent 42%),
-    linear-gradient(135deg,
+    radial-gradient(circle at 18% 14%, var(--bubble-hi-done), transparent 42%),
+    linear-gradient(
+      135deg,
       color-mix(in srgb, var(--green) 20%, transparent),
-      color-mix(in srgb, var(--mint) 12%, transparent));
+      color-mix(in srgb, var(--mint) 12%, transparent)
+    );
   border-color: color-mix(in srgb, var(--green) 55%, transparent);
   box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.72),
+    inset 0 1px 1px var(--hi-soft),
     0 6px 20px color-mix(in srgb, var(--green-bright) 20%, transparent);
 }
 .taskList li.task-done > span {
@@ -510,24 +705,30 @@ select option {
 /* Pseudo-elements used for the sparkle + ripple (hidden by default) */
 .taskList li::before,
 .taskList li::after {
-  content: "";
+  content: '';
   position: absolute;
   pointer-events: none;
   opacity: 0;
 }
-.taskList li::before {                 /* ripple ring */
+.taskList li::before {
+  /* ripple ring */
   inset: 0;
   border: 2px solid var(--green-bright);
   border-radius: inherit;
 }
-.taskList li::after {                  /* sparkle burst */
+.taskList li::after {
+  /* sparkle burst */
   inset: -10px;
   background:
-    radial-gradient(circle at 8% 22%,  var(--rose) 0 2px, transparent 3px),
+    radial-gradient(circle at 8% 22%, var(--rose) 0 2px, transparent 3px),
     radial-gradient(circle at 92% 18%, var(--aqua) 0 2.5px, transparent 3.5px),
     radial-gradient(circle at 18% 90%, var(--lilac) 0 2px, transparent 3px),
     radial-gradient(circle at 84% 86%, var(--peach) 0 2.5px, transparent 3.5px),
-    radial-gradient(circle at 50% 2%,  var(--green-bright) 0 2px, transparent 3px),
+    radial-gradient(
+      circle at 50% 2%,
+      var(--green-bright) 0 2px,
+      transparent 3px
+    ),
     radial-gradient(circle at 52% 98%, var(--mint) 0 2px, transparent 3px);
 }
 
@@ -558,7 +759,6 @@ select option {
   animation: none;
 }
 
-
 /* ---------- 8. EMPTY STATE (add className="emptyState" in App.tsx) ---------- */
 .emptyState {
   margin: 0;
@@ -566,7 +766,7 @@ select option {
   text-align: center;
   font-size: 1.05rem;
   color: color-mix(in srgb, var(--text) 78%, transparent);
-  background: rgba(255, 255, 255, 0.4);
+  background: var(--empty-bg);
   -webkit-backdrop-filter: blur(var(--glass-blur));
   backdrop-filter: blur(var(--glass-blur));
   border: 1px dashed color-mix(in srgb, var(--text) 30%, transparent);
@@ -575,74 +775,158 @@ select option {
   animation: fadeUp 0.9s ease both;
 }
 .emptyState::before {
-  content: "🫧";
+  content: '🫧';
   display: block;
   margin-bottom: 0.5rem;
   font-size: 2rem;
   animation: floaty 5s ease-in-out infinite;
 }
 
-
 /* ---------- 9. KEYFRAMES ---------- */
 @keyframes driftA {
-  0%   { transform: translate3d(-4%, -3%, 0) rotate(0deg) scale(1); }
-  50%  { transform: translate3d(5%, 4%, 0) rotate(8deg) scale(1.08); }
-  100% { transform: translate3d(-2%, 6%, 0) rotate(-6deg) scale(1.02); }
+  0% {
+    transform: translate3d(-4%, -3%, 0) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translate3d(5%, 4%, 0) rotate(8deg) scale(1.08);
+  }
+  100% {
+    transform: translate3d(-2%, 6%, 0) rotate(-6deg) scale(1.02);
+  }
 }
 @keyframes driftB {
-  0%   { transform: translate3d(5%, 4%, 0) rotate(0deg) scale(1.05); }
-  50%  { transform: translate3d(-6%, -2%, 0) rotate(-10deg) scale(0.95); }
-  100% { transform: translate3d(3%, -6%, 0) rotate(7deg) scale(1.1); }
+  0% {
+    transform: translate3d(5%, 4%, 0) rotate(0deg) scale(1.05);
+  }
+  50% {
+    transform: translate3d(-6%, -2%, 0) rotate(-10deg) scale(0.95);
+  }
+  100% {
+    transform: translate3d(3%, -6%, 0) rotate(7deg) scale(1.1);
+  }
 }
 @keyframes shimmer {
-  to { background-position: -200% 0; }
+  to {
+    background-position: -200% 0;
+  }
 }
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @keyframes floaty {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-8px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes iconSpin {
+  from {
+    opacity: 0;
+    transform: rotate(-140deg) scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
 }
 
 /* Add: scale-up from 0.8, fade in, blur to sharp, elastic overshoot */
 @keyframes taskEnter {
-  0%   { opacity: 0; transform: scale(0.8); filter: blur(12px); }
-  60%  { opacity: 1; filter: blur(0); }
-  100% { opacity: 1; transform: scale(1); filter: blur(0); }
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+    filter: blur(12px);
+  }
+  60% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
 }
 /* Add: soft green glow pulse */
 @keyframes glowPulse {
-  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--green-bright) 0%, transparent); }
-  35%  { box-shadow: 0 0 34px 6px color-mix(in srgb, var(--green-bright) 55%, transparent); }
-  100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--green-bright) 0%, transparent); }
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--green-bright) 0%, transparent);
+  }
+  35% {
+    box-shadow: 0 0 34px 6px
+      color-mix(in srgb, var(--green-bright) 55%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--green-bright) 0%, transparent);
+  }
 }
 /* Add/Delete: expanding ring */
 @keyframes rippleBurst {
-  0%   { opacity: 0.8; transform: scale(0.96); }
-  100% { opacity: 0;   transform: scale(1.18, 1.5); }
+  0% {
+    opacity: 0.8;
+    transform: scale(0.96);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.18, 1.5);
+  }
 }
 /* Add: tiny sparkle burst */
 @keyframes sparkleBurst {
-  0%   { opacity: 0; transform: scale(0.6); }
-  40%  { opacity: 1; transform: scale(1); }
-  100% { opacity: 0; transform: scale(1.25); }
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.25);
+  }
 }
 /* Delete: swell, then pop away upward while the gap collapses */
 @keyframes taskExit {
-  0%   { opacity: 1; transform: scale(1); filter: blur(0);
-         max-height: var(--task-height); margin-bottom: 0.85rem; }
-  25%  { opacity: 1; transform: scale(1.06); filter: blur(0); }
-  100% { opacity: 0; transform: translateY(-26px) scale(0.55); filter: blur(14px);
-         max-height: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; border-width: 0; }
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+    max-height: var(--task-height);
+    margin-bottom: 0.85rem;
+  }
+  25% {
+    opacity: 1;
+    transform: scale(1.06);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-26px) scale(0.55);
+    filter: blur(14px);
+    max-height: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 0;
+  }
 }
-
 
 /* ---------- 10. RESPONSIVE ---------- */
 @media (max-width: 560px) {
   #root {
-    padding: 1.5rem 1rem 3rem;
+    padding: 4.5rem 1rem 3rem;
   }
   .taskInput {
     flex-direction: column;
@@ -663,7 +947,6 @@ select option {
     padding: 0.75rem 0.9rem;
   }
 }
-
 
 /* ---------- 11. REDUCED MOTION ---------- */
 @media (prefers-reduced-motion: reduce) {
