@@ -1,76 +1,691 @@
-body {
-  background-color: #2a2438;
-  color: #feffdf;
-  font-family: 'Courier New', Courier, monospace;
+/* =========================================================
+   TASKUEEN · App.css
+   Watery, dreamy glassmorphism on a twilight-purple base.
+   Sections: 1 Variables · 2 Base & watery background · 3 Header
+   4 Input & Add button · 5 Select · 6 Glass task list
+   7 Task bubbles (+ enter/exit/done) · 8 Empty state
+   9 Keyframes · 10 Responsive · 11 Reduced motion
+   ========================================================= */
+
+
+/* ---------- 1. VARIABLES (tweak the whole theme here) ---------- */
+:root {
+  /* Core palette */
+  --bg: #2a2438;            /* deep twilight purple */
+  --cream: #feffdf;         /* text + highlights */
+  --green: #7dd87d;         /* fresh green accent */
+  --green-bright: #37f737;  /* glow / completed accent */
+
+  /* Pastel tones for orbs, gradients, hover glows */
+  --aqua: #9be7f2;
+  --lilac: #c3a8f5;
+  --peach: #ffc6a5;
+  --mint: #a8f0d0;
+
+  /* Glass recipe */
+  --glass-bg: rgba(42, 36, 56, 0.5);                  /* 50% opacity glass */
+  --glass-border: rgba(254, 255, 223, 0.18);
+  --glass-blur: 18px;
+  --glass-highlight: inset 0 1px 1px rgba(254, 255, 223, 0.28);
+  --glass-shadow: 0 18px 50px rgba(10, 6, 20, 0.45);
+
+  /* Motion */
+  --ease-soft: 0.4s ease;
+  --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --enter-duration: 0.8s;
+  --exit-duration: 0.45s;   /* keep in sync with the setTimeout in useTasks */
+  --task-height: 5.5rem;    /* roughly one task's height, used for the collapse on delete */
+
+  /* Per-task hover glow (cycled by nth-child below) */
+  --glow: var(--aqua);
+
+  --radius-lg: 28px;
+  --radius-pill: 999px;
 }
 
+
+/* ---------- 2. BASE & WATERY BACKGROUND ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  display: block;            /* cancels Vite's default flex-centering body */
+  place-items: initial;
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--bg);
+  color: var(--cream);
+  font-family: "Quicksand", "Nunito", "Segoe UI", system-ui, sans-serif;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* Layer 1: big, slow, blurred pastel orbs */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -25%;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 26%, color-mix(in srgb, var(--aqua) 55%, transparent) 0, transparent 34%),
+    radial-gradient(circle at 78% 18%, color-mix(in srgb, var(--lilac) 50%, transparent) 0, transparent 36%),
+    radial-gradient(circle at 72% 78%, color-mix(in srgb, var(--peach) 38%, transparent) 0, transparent 32%),
+    radial-gradient(circle at 24% 82%, color-mix(in srgb, var(--mint) 45%, transparent) 0, transparent 34%);
+  filter: blur(60px);
+  animation: driftA 32s ease-in-out infinite alternate;
+}
+
+/* Layer 2: smaller orbs drifting the other way, like light through water */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 60% 40%, color-mix(in srgb, var(--mint) 35%, transparent) 0, transparent 22%),
+    radial-gradient(circle at 35% 60%, color-mix(in srgb, var(--lilac) 38%, transparent) 0, transparent 24%),
+    radial-gradient(circle at 85% 55%, color-mix(in srgb, var(--aqua) 32%, transparent) 0, transparent 20%);
+  filter: blur(70px);
+  mix-blend-mode: screen;
+  animation: driftB 44s ease-in-out infinite alternate;
+}
+
+/* App container (React mounts into #root) */
+#root {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 5vw, 3.5rem) 1.25rem 4rem;
+  text-align: left;
+}
+
+::selection {
+  background: var(--green-bright);
+  color: var(--bg);
+}
+
+/* Custom thin scrollbar (page + task list) */
+html,
+.taskList {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--green) 60%, transparent) transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--aqua), var(--lilac));
+  border-radius: var(--radius-pill);
+  opacity: 0.7;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(var(--green), var(--green-bright));
+}
+
+
+/* ---------- 3. HEADER (h1 shimmer, h6 fade-in) ---------- */
 header {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  margin-bottom: 2rem;
+  text-align: center;
 }
 
 h1 {
-  font-size: 80px;
-  margin: 5px;
-  padding: 15px;
+  margin: 0;
+  font-size: clamp(2.3rem, 7vw, 3.4rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: linear-gradient(
+    110deg,
+    var(--cream) 0%,
+    var(--aqua) 25%,
+    var(--lilac) 50%,
+    var(--green) 75%,
+    var(--cream) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 0 18px color-mix(in srgb, var(--green) 35%, transparent));
+  animation: shimmer 9s linear infinite;
 }
 
 h6 {
-  font-size: 20px;
-  margin-top: 5px;
-  padding: 15px;
+  margin: 0.4rem 0 0;
+  font-size: 0.95rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  color: color-mix(in srgb, var(--cream) 80%, transparent);
+  animation: fadeUp 1.4s 0.4s ease both;
 }
 
+
+/* ---------- 4. INPUT + ADD BUTTON ---------- */
 .taskInput {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
 }
 
-input {
-  width: 70%;
-  padding: 15px 20px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  margin-right: 15px;
-  color: #feffdf;
-  background-color: transparent;
-  border: 1px solid #feffdf;
-  border-radius: 15px;
-  font-size: 15px;
+input[type="text"] {
+  flex: 1;
+  min-width: 0;
+  padding: 0.95rem 1.3rem;
+  font: inherit;
+  color: var(--cream);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--glass-highlight), 0 8px 24px rgba(10, 6, 20, 0.25);
+  outline: none;
+  transition: border-color var(--ease-soft), box-shadow var(--ease-soft),
+    background var(--ease-soft), transform var(--ease-soft);
 }
 
+input[type="text"]:hover {
+  border-color: color-mix(in srgb, var(--aqua) 55%, transparent);
+}
+
+/* Glowing focus ring */
+input[type="text"]:focus {
+  border-color: var(--green);
+  background: color-mix(in srgb, var(--bg) 62%, transparent);
+  box-shadow:
+    var(--glass-highlight),
+    0 0 0 3px color-mix(in srgb, var(--green) 35%, transparent),
+    0 0 26px color-mix(in srgb, var(--green-bright) 40%, transparent);
+  transform: translateY(-1px);
+}
+
+/* Placeholder fades out on focus */
+input[type="text"]::placeholder {
+  color: color-mix(in srgb, var(--cream) 55%, transparent);
+  opacity: 1;
+  transition: opacity var(--ease-soft), letter-spacing var(--ease-soft);
+}
+input[type="text"]:focus::placeholder {
+  opacity: 0;
+  letter-spacing: 0.12em;
+}
+
+/* Plain buttons (base look; .addBtn and list buttons override) */
+button {
+  font: inherit;
+  cursor: pointer;
+  color: var(--cream);
+  transition: transform var(--ease-soft), box-shadow var(--ease-soft),
+    background var(--ease-soft), border-color var(--ease-soft), color var(--ease-soft);
+}
+button:focus-visible {
+  outline: 2px solid var(--green-bright);
+  outline-offset: 3px;
+}
+button:disabled {
+  cursor: default;
+}
+
+/* Add button: green gradient, glow, shine sweep, click ripple */
 .addBtn {
-  width: 15%;
-  padding: 15px;
-  background-color: transparent;
-  color: #7dd87d;
-  border: 1px solid #7dd87d;
-  border-radius: 15px;
-  transition: all 0.2s ease-in-out;
+  position: relative;
+  overflow: hidden;
+  padding: 0.95rem 1.6rem;
+  font-weight: 700;
+  color: var(--bg);
+  white-space: nowrap;
+  background: linear-gradient(135deg, var(--green), var(--green-bright));
+  border: 1px solid color-mix(in srgb, var(--cream) 35%, transparent);
+  border-radius: var(--radius-pill);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.55),
+    0 8px 22px color-mix(in srgb, var(--green-bright) 35%, transparent);
+}
+
+/* shine sweep */
+.addBtn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -80%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.7s ease;
+}
+.addBtn:hover::before {
+  left: 130%;
+}
+
+/* ripple on press */
+.addBtn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.7) 0, transparent 60%);
+  opacity: 0;
+  transform: scale(0);
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+.addBtn:active::after {
+  opacity: 1;
+  transform: scale(2.6);
+  transition-duration: 0s;
 }
 
 .addBtn:hover {
-  cursor: pointer;
-  color: #37f737;
-  border: 1px solid #37f737;
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.55),
+    0 12px 30px color-mix(in srgb, var(--green-bright) 55%, transparent);
+}
+.addBtn:active {
+  transform: translateY(0) scale(0.97);
 }
 
-.taskCompleted {
-  text-decoration: line-through;
-  opacity: 0.5;
+
+/* ---------- 5. CUSTOM SELECT (filter) ---------- */
+select {
+  display: block;
+  margin: 0 0 1rem;
+  padding: 0.65rem 2.6rem 0.65rem 1.2rem;
+  font: inherit;
+  color: var(--cream);
+  cursor: pointer;
+  background-color: var(--glass-bg);
+  /* cream chevron (the # is %23 inside the data URI) */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1.5l6 6 6-6' fill='none' stroke='%23feffdf' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--glass-highlight);
+  outline: none;
+  transition: border-color var(--ease-soft), box-shadow var(--ease-soft),
+    transform var(--ease-soft), background-color var(--ease-soft);
+}
+select:hover {
+  border-color: color-mix(in srgb, var(--lilac) 70%, transparent);
+  box-shadow: var(--glass-highlight), 0 0 20px color-mix(in srgb, var(--lilac) 40%, transparent);
+  transform: translateY(-1px);
+}
+select:focus {
+  border-color: var(--green);
+  box-shadow:
+    var(--glass-highlight),
+    0 0 0 3px color-mix(in srgb, var(--green) 35%, transparent),
+    0 0 22px color-mix(in srgb, var(--green-bright) 35%, transparent);
+}
+select option {
+  background: var(--bg);
+  color: var(--cream);
 }
 
-.deleteBtn{
-  background: transparent;
-  border: none;
-  transition: all .1s ease-in-out;
+
+/* ---------- 6. FROSTED-GLASS TASK LIST ---------- */
+.taskList {
+  max-height: min(60vh, 520px);
+  padding: 1.1rem;
+  overflow-y: auto;
+  background:
+    linear-gradient(145deg,
+      color-mix(in srgb, var(--aqua) 8%, transparent),
+      color-mix(in srgb, var(--lilac) 6%, transparent)),
+    var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    var(--glass-highlight),                       /* top inner highlight */
+    inset 0 -12px 30px rgba(10, 6, 20, 0.25),     /* bottom inner shadow */
+    var(--glass-shadow);                          /* outer shadow */
+  animation: fadeUp 0.8s ease both;
 }
-.deleteBtn:hover{
+
+/* Assumes TaskList renders <ul><li>…</li></ul> */
+.taskList ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+
+/* ---------- 7. TASK BUBBLES ---------- */
+.taskList li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  max-height: var(--task-height);
+  margin: 0 0 0.85rem;
+  padding: 0.85rem 1.1rem;
+  background:
+    radial-gradient(circle at 18% 14%, rgba(255, 255, 255, 0.22), transparent 42%),  /* bubble highlight */
+    linear-gradient(135deg,
+      color-mix(in srgb, var(--aqua) 14%, transparent),
+      color-mix(in srgb, var(--lilac) 12%, transparent));
+  border: 1px solid rgba(254, 255, 223, 0.2);
+  border-radius: 24px 24px 24px 10px;     /* droplet shape */
+  box-shadow:
+    inset 0 1px 1px rgba(254, 255, 223, 0.3),
+    inset 0 -6px 14px rgba(10, 6, 20, 0.2),
+    0 6px 16px rgba(10, 6, 20, 0.25);
+  transition: transform var(--ease-soft), box-shadow var(--ease-soft),
+    border-color var(--ease-soft), background var(--ease-soft), opacity var(--ease-soft);
+}
+.taskList li:last-child {
+  margin-bottom: 0;
+}
+
+/* Cycle pastel hover glows */
+.taskList li:nth-child(4n + 1) { --glow: var(--aqua); }
+.taskList li:nth-child(4n + 2) { --glow: var(--lilac); }
+.taskList li:nth-child(4n + 3) { --glow: var(--peach); }
+.taskList li:nth-child(4n + 4) { --glow: var(--mint); }
+
+/* Gentle hover lift + glow */
+.taskList li:hover {
+  transform: translateY(-3px) scale(1.012);
+  border-color: color-mix(in srgb, var(--glow) 70%, transparent);
+  box-shadow:
+    inset 0 1px 1px rgba(254, 255, 223, 0.4),
+    inset 0 -6px 14px rgba(10, 6, 20, 0.18),
+    0 10px 26px color-mix(in srgb, var(--glow) 38%, transparent);
+}
+
+/* Task text */
+.taskList li > span {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  /* strikethrough is a gradient line that grows across the text */
+  background: linear-gradient(var(--green-bright), var(--green-bright)) no-repeat 0 55% / 0% 2px;
+  transition: background-size 0.5s ease, color var(--ease-soft), opacity var(--ease-soft);
+}
+
+/* Custom checkbox bubble */
+.taskList input[type="checkbox"] {
+  position: relative;
+  flex: none;
+  width: 1.6rem;
+  height: 1.6rem;
+  margin: 0;
+  padding: 0;
   cursor: pointer;
-  opacity: .5;
+  -webkit-appearance: none;
+  appearance: none;
+  background: radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.4), transparent 55%);
+  border: 2px solid color-mix(in srgb, var(--cream) 50%, transparent);
+  border-radius: 50%;
+  transition: background var(--ease-soft), border-color var(--ease-soft),
+    box-shadow var(--ease-soft), transform var(--ease-soft);
+}
+.taskList input[type="checkbox"]:hover {
+  border-color: var(--green);
+  transform: scale(1.1);
+}
+.taskList input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--green-bright);
+  outline-offset: 3px;
+}
+.taskList input[type="checkbox"]::after {
+  content: "";
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  width: 0.35rem;
+  height: 0.7rem;
+  border: solid var(--bg);
+  border-width: 0 2.5px 2.5px 0;
+  transform: translate(-50%, -50%) rotate(45deg) scale(0);
+  transition: transform 0.45s var(--ease-elastic);
+}
+.taskList input[type="checkbox"]:checked {
+  background: linear-gradient(135deg, var(--green), var(--green-bright));
+  border-color: var(--green-bright);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--green-bright) 60%, transparent);
+}
+.taskList input[type="checkbox"]:checked::after {
+  transform: translate(-50%, -50%) rotate(45deg) scale(1);
+}
+
+/* Delete button (any button inside the list) */
+.taskList button {
+  flex: none;
+  display: grid;
+  place-items: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.6rem;
+  line-height: 1;
+  color: color-mix(in srgb, var(--cream) 80%, transparent);
+  background: rgba(254, 255, 223, 0.06);
+  border: 1px solid rgba(254, 255, 223, 0.18);
+  border-radius: var(--radius-pill);
+}
+.taskList button:hover {
+  color: var(--bg);
+  background: var(--peach);
+  border-color: var(--peach);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--peach) 60%, transparent);
+  transform: scale(1.08);
+}
+.taskList button:active {
+  transform: scale(0.94);
+}
+
+/* ----- Completed state: add class "task-done" to the <li> ----- */
+.taskList li.task-done {
+  background:
+    radial-gradient(circle at 18% 14%, rgba(255, 255, 255, 0.18), transparent 42%),
+    linear-gradient(135deg,
+      color-mix(in srgb, var(--green) 20%, transparent),
+      color-mix(in srgb, var(--mint) 12%, transparent));
+  border-color: color-mix(in srgb, var(--green) 55%, transparent);
+  box-shadow:
+    inset 0 1px 1px rgba(254, 255, 223, 0.3),
+    0 6px 20px color-mix(in srgb, var(--green-bright) 20%, transparent);
+}
+.taskList li.task-done > span {
+  background-size: 100% 2px;
+  color: color-mix(in srgb, var(--cream) 55%, transparent);
+}
+
+/* Pseudo-elements used for the sparkle + ripple (hidden by default) */
+.taskList li::before,
+.taskList li::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+}
+.taskList li::before {                 /* ripple ring */
+  inset: 0;
+  border: 2px solid var(--green-bright);
+  border-radius: inherit;
+}
+.taskList li::after {                  /* sparkle burst */
+  inset: -10px;
+  background:
+    radial-gradient(circle at 8% 22%,  var(--cream) 0 2px, transparent 3px),
+    radial-gradient(circle at 92% 18%, var(--aqua) 0 2.5px, transparent 3.5px),
+    radial-gradient(circle at 18% 90%, var(--lilac) 0 2px, transparent 3px),
+    radial-gradient(circle at 84% 86%, var(--peach) 0 2.5px, transparent 3.5px),
+    radial-gradient(circle at 50% 2%,  var(--green-bright) 0 2px, transparent 3px),
+    radial-gradient(circle at 52% 98%, var(--mint) 0 2px, transparent 3px);
+}
+
+/* ----- ENTER: add class "task-enter" to every <li> ----- */
+.task-enter {
+  animation:
+    taskEnter var(--enter-duration) var(--ease-elastic) backwards,
+    glowPulse 1.3s ease-out backwards;
+}
+.task-enter:not(.task-exit)::before {
+  animation: rippleBurst 0.9s ease-out backwards;
+}
+.task-enter:not(.task-exit)::after {
+  animation: sparkleBurst 1s ease-out backwards;
+}
+
+/* ----- EXIT: add class "task-exit" to the <li> being deleted ----- */
+/* Must stay AFTER .task-enter so it wins the cascade. */
+.task-exit {
+  pointer-events: none;
+  animation: taskExit var(--exit-duration) cubic-bezier(0.4, 0, 0.7, 1) forwards;
+}
+.task-exit::before {
+  border-color: var(--aqua);
+  animation: rippleBurst var(--exit-duration) ease-out forwards;
+}
+.task-exit::after {
+  animation: none;
+}
+
+
+/* ---------- 8. EMPTY STATE (add className="emptyState" in App.tsx) ---------- */
+.emptyState {
+  margin: 0;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  font-size: 1.05rem;
+  color: color-mix(in srgb, var(--cream) 78%, transparent);
+  background: color-mix(in srgb, var(--bg) 40%, transparent);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px dashed color-mix(in srgb, var(--cream) 30%, transparent);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-highlight);
+  animation: fadeUp 0.9s ease both;
+}
+.emptyState::before {
+  content: "🫧";
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+  animation: floaty 5s ease-in-out infinite;
+}
+
+
+/* ---------- 9. KEYFRAMES ---------- */
+@keyframes driftA {
+  0%   { transform: translate3d(-4%, -3%, 0) rotate(0deg) scale(1); }
+  50%  { transform: translate3d(5%, 4%, 0) rotate(8deg) scale(1.08); }
+  100% { transform: translate3d(-2%, 6%, 0) rotate(-6deg) scale(1.02); }
+}
+@keyframes driftB {
+  0%   { transform: translate3d(5%, 4%, 0) rotate(0deg) scale(1.05); }
+  50%  { transform: translate3d(-6%, -2%, 0) rotate(-10deg) scale(0.95); }
+  100% { transform: translate3d(3%, -6%, 0) rotate(7deg) scale(1.1); }
+}
+@keyframes shimmer {
+  to { background-position: -200% 0; }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+/* Add: scale-up from 0.8, fade in, blur to sharp, elastic overshoot */
+@keyframes taskEnter {
+  0%   { opacity: 0; transform: scale(0.8); filter: blur(12px); }
+  60%  { opacity: 1; filter: blur(0); }
+  100% { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+/* Add: soft green glow pulse */
+@keyframes glowPulse {
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--green-bright) 0%, transparent); }
+  35%  { box-shadow: 0 0 34px 6px color-mix(in srgb, var(--green-bright) 55%, transparent); }
+  100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--green-bright) 0%, transparent); }
+}
+/* Add/Delete: expanding ring */
+@keyframes rippleBurst {
+  0%   { opacity: 0.8; transform: scale(0.96); }
+  100% { opacity: 0;   transform: scale(1.18, 1.5); }
+}
+/* Add: tiny sparkle burst */
+@keyframes sparkleBurst {
+  0%   { opacity: 0; transform: scale(0.6); }
+  40%  { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.25); }
+}
+/* Delete: swell, then pop away upward while the gap collapses */
+@keyframes taskExit {
+  0%   { opacity: 1; transform: scale(1); filter: blur(0);
+         max-height: var(--task-height); margin-bottom: 0.85rem; }
+  25%  { opacity: 1; transform: scale(1.06); filter: blur(0); }
+  100% { opacity: 0; transform: translateY(-26px) scale(0.55); filter: blur(14px);
+         max-height: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; border-width: 0; }
+}
+
+
+/* ---------- 10. RESPONSIVE ---------- */
+@media (max-width: 560px) {
+  #root {
+    padding: 1.5rem 1rem 3rem;
+  }
+  .taskInput {
+    flex-direction: column;
+  }
+  .addBtn {
+    width: 100%;
+  }
+  select {
+    width: 100%;
+  }
+  .taskList {
+    max-height: 55vh;
+    padding: 0.8rem;
+    border-radius: 22px;
+  }
+  .taskList li {
+    gap: 0.7rem;
+    padding: 0.75rem 0.9rem;
+  }
+}
+
+
+/* ---------- 11. REDUCED MOTION ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  body::before,
+  body::after,
+  h1 {
+    animation: none;
+  }
+  .taskList li::before,
+  .taskList li::after {
+    display: none;
+  }
 }
