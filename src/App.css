@@ -1,33 +1,28 @@
-/* =========================================================
-   TASKUEEN · App.css
-   Watery, dreamy glassmorphism on a twilight-purple base.
-   Sections: 1 Variables · 2 Base & watery background · 3 Header
-   4 Input & Add button · 5 Select · 6 Glass task list
-   7 Task bubbles (+ enter/exit/done) · 8 Empty state
-   9 Keyframes · 10 Responsive · 11 Reduced motion
-   ========================================================= */
-
-
 /* ---------- 1. VARIABLES (tweak the whole theme here) ---------- */
 :root {
   /* Core palette */
-  --bg: #2a2438;            /* deep twilight purple */
-  --cream: #feffdf;         /* text + highlights */
-  --green: #7dd87d;         /* fresh green accent */
-  --green-bright: #37f737;  /* glow / completed accent */
+  --bg: #f1e8fb;            /* soft lilac-cream base */
+  --text: #9464ec;          /* deep plum text (readable on pastel glass) */
+  --on-accent: #119854;     /* text color on green buttons */
+  --green: #8fe3a8;         /* pastel green accent */
+  --green-bright: #4fe08a;  /* glow / completed accent */
+
+  /* Delete button: smooth pink / red */
+  --pink: #ffb6cc;
+  --rose: #f2607f;
 
   /* Pastel tones for orbs, gradients, hover glows */
-  --aqua: #9be7f2;
-  --lilac: #c3a8f5;
-  --peach: #ffc6a5;
-  --mint: #a8f0d0;
+  --aqua: #9fe3f0;
+  --lilac: #c9b3f7;
+  --peach: #ffcfb0;
+  --mint: #aaf0d4;
 
   /* Glass recipe */
-  --glass-bg: rgba(42, 36, 56, 0.5);                  /* 50% opacity glass */
-  --glass-border: rgba(254, 255, 223, 0.18);
+  --glass-bg: rgba(255, 255, 255, 0.5);               /* 50% opacity white glass */
+  --glass-border: rgba(255, 255, 255, 0.75);
   --glass-blur: 18px;
-  --glass-highlight: inset 0 1px 1px rgba(254, 255, 223, 0.28);
-  --glass-shadow: 0 18px 50px rgba(10, 6, 20, 0.45);
+  --glass-highlight: inset 0 1px 1px rgba(255, 255, 255, 0.67);
+  --glass-shadow: 0 18px 50px rgba(120, 90, 160, 0.22);
 
   /* Motion */
   --ease-soft: 0.4s ease;
@@ -52,7 +47,7 @@
 }
 
 html {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
@@ -62,7 +57,7 @@ body {
   min-height: 100vh;
   margin: 0;
   background: var(--bg);
-  color: var(--cream);
+  color: var(--text);
   font-family: "Quicksand", "Nunito", "Segoe UI", system-ui, sans-serif;
   line-height: 1.5;
   overflow-x: hidden;
@@ -76,10 +71,10 @@ body::before {
   z-index: -2;
   pointer-events: none;
   background:
-    radial-gradient(circle at 18% 26%, color-mix(in srgb, var(--aqua) 55%, transparent) 0, transparent 34%),
-    radial-gradient(circle at 78% 18%, color-mix(in srgb, var(--lilac) 50%, transparent) 0, transparent 36%),
-    radial-gradient(circle at 72% 78%, color-mix(in srgb, var(--peach) 38%, transparent) 0, transparent 32%),
-    radial-gradient(circle at 24% 82%, color-mix(in srgb, var(--mint) 45%, transparent) 0, transparent 34%);
+    radial-gradient(circle at 18% 26%, color-mix(in srgb, var(--aqua) 88%, transparent) 0, transparent 34%),
+    radial-gradient(circle at 78% 18%, color-mix(in srgb, var(--lilac) 80%, transparent) 0, transparent 36%),
+    radial-gradient(circle at 72% 78%, color-mix(in srgb, var(--peach) 60%, transparent) 0, transparent 32%),
+    radial-gradient(circle at 24% 82%, color-mix(in srgb, var(--mint) 72%, transparent) 0, transparent 34%);
   filter: blur(60px);
   animation: driftA 32s ease-in-out infinite alternate;
 }
@@ -92,11 +87,11 @@ body::after {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(circle at 60% 40%, color-mix(in srgb, var(--mint) 35%, transparent) 0, transparent 22%),
-    radial-gradient(circle at 35% 60%, color-mix(in srgb, var(--lilac) 38%, transparent) 0, transparent 24%),
-    radial-gradient(circle at 85% 55%, color-mix(in srgb, var(--aqua) 32%, transparent) 0, transparent 20%);
+    radial-gradient(circle at 60% 40%, color-mix(in srgb, var(--mint) 56%, transparent) 0, transparent 22%),
+    radial-gradient(circle at 35% 60%, color-mix(in srgb, var(--lilac) 60%, transparent) 0, transparent 24%),
+    radial-gradient(circle at 85% 55%, color-mix(in srgb, var(--pink) 51%, transparent) 0, transparent 20%);
   filter: blur(70px);
-  mix-blend-mode: screen;
+  mix-blend-mode: normal;
   animation: driftB 44s ease-in-out infinite alternate;
 }
 
@@ -111,8 +106,8 @@ body::after {
 }
 
 ::selection {
-  background: var(--green-bright);
-  color: var(--bg);
+  background: var(--green);
+  color: var(--text);
 }
 
 /* Custom thin scrollbar (page + task list) */
@@ -150,11 +145,11 @@ h1 {
   letter-spacing: 0.02em;
   background: linear-gradient(
     110deg,
-    var(--cream) 0%,
-    var(--aqua) 25%,
-    var(--lilac) 50%,
-    var(--green) 75%,
-    var(--cream) 100%
+    #6d4aa0 0%,
+    #3f9fc4 25%,
+    #ff87d1 50%,
+    #35b36d 75%,
+    #6d4aa0 100%
   );
   background-size: 200% 100%;
   -webkit-background-clip: text;
@@ -170,7 +165,7 @@ h6 {
   font-size: 0.95rem;
   font-weight: 400;
   letter-spacing: 0.14em;
-  color: color-mix(in srgb, var(--cream) 80%, transparent);
+  color: color-mix(in srgb, var(--text) 80%, transparent);
   animation: fadeUp 1.4s 0.4s ease both;
 }
 
@@ -187,13 +182,13 @@ input[type="text"] {
   min-width: 0;
   padding: 0.95rem 1.3rem;
   font: inherit;
-  color: var(--cream);
+  color: var(--text);
   background: var(--glass-bg);
   -webkit-backdrop-filter: blur(var(--glass-blur));
   backdrop-filter: blur(var(--glass-blur));
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-pill);
-  box-shadow: var(--glass-highlight), 0 8px 24px rgba(10, 6, 20, 0.25);
+  box-shadow: var(--glass-highlight), 0 8px 24px rgba(120, 90, 160, 0.12);
   outline: none;
   transition: border-color var(--ease-soft), box-shadow var(--ease-soft),
     background var(--ease-soft), transform var(--ease-soft);
@@ -206,7 +201,7 @@ input[type="text"]:hover {
 /* Glowing focus ring */
 input[type="text"]:focus {
   border-color: var(--green);
-  background: color-mix(in srgb, var(--bg) 62%, transparent);
+  background: rgba(255, 255, 255, 0.78);
   box-shadow:
     var(--glass-highlight),
     0 0 0 3px color-mix(in srgb, var(--green) 35%, transparent),
@@ -216,7 +211,7 @@ input[type="text"]:focus {
 
 /* Placeholder fades out on focus */
 input[type="text"]::placeholder {
-  color: color-mix(in srgb, var(--cream) 55%, transparent);
+  color: color-mix(in srgb, var(--text) 55%, transparent);
   opacity: 1;
   transition: opacity var(--ease-soft), letter-spacing var(--ease-soft);
 }
@@ -229,7 +224,7 @@ input[type="text"]:focus::placeholder {
 button {
   font: inherit;
   cursor: pointer;
-  color: var(--cream);
+  color: var(--text);
   transition: transform var(--ease-soft), box-shadow var(--ease-soft),
     background var(--ease-soft), border-color var(--ease-soft), color var(--ease-soft);
 }
@@ -247,10 +242,10 @@ button:disabled {
   overflow: hidden;
   padding: 0.95rem 1.6rem;
   font-weight: 700;
-  color: var(--bg);
+  color: var(--on-accent);
   white-space: nowrap;
   background: linear-gradient(135deg, var(--green), var(--green-bright));
-  border: 1px solid color-mix(in srgb, var(--cream) 35%, transparent);
+  border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: var(--radius-pill);
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.55),
@@ -306,11 +301,11 @@ select {
   margin: 0 0 1rem;
   padding: 0.65rem 2.6rem 0.65rem 1.2rem;
   font: inherit;
-  color: var(--cream);
+  color: var(--text);
   cursor: pointer;
   background-color: var(--glass-bg);
   /* cream chevron (the # is %23 inside the data URI) */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1.5l6 6 6-6' fill='none' stroke='%23feffdf' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1.5l6 6 6-6' fill='none' stroke='%234a3d63' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 1rem center;
   -webkit-appearance: none;
@@ -337,8 +332,8 @@ select:focus {
     0 0 22px color-mix(in srgb, var(--green-bright) 35%, transparent);
 }
 select option {
-  background: var(--bg);
-  color: var(--cream);
+  background: #ffffff;
+  color: var(--text);
 }
 
 
@@ -349,8 +344,8 @@ select option {
   overflow-y: auto;
   background:
     linear-gradient(145deg,
-      color-mix(in srgb, var(--aqua) 8%, transparent),
-      color-mix(in srgb, var(--lilac) 6%, transparent)),
+      color-mix(in srgb, var(--aqua) 20%, transparent),
+      color-mix(in srgb, var(--lilac) 16%, transparent)),
     var(--glass-bg);
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
   backdrop-filter: blur(var(--glass-blur)) saturate(140%);
@@ -358,7 +353,7 @@ select option {
   border-radius: var(--radius-lg);
   box-shadow:
     var(--glass-highlight),                       /* top inner highlight */
-    inset 0 -12px 30px rgba(10, 6, 20, 0.25),     /* bottom inner shadow */
+    inset 0 -12px 30px rgba(120, 90, 160, 0.12),     /* bottom inner shadow */
     var(--glass-shadow);                          /* outer shadow */
   animation: fadeUp 0.8s ease both;
 }
@@ -381,16 +376,16 @@ select option {
   margin: 0 0 0.85rem;
   padding: 0.85rem 1.1rem;
   background:
-    radial-gradient(circle at 18% 14%, rgba(255, 255, 255, 0.22), transparent 42%),  /* bubble highlight */
+    radial-gradient(circle at 18% 14%, rgba(255, 255, 255, 0.75), transparent 42%),  /* bubble highlight */
     linear-gradient(135deg,
-      color-mix(in srgb, var(--aqua) 14%, transparent),
-      color-mix(in srgb, var(--lilac) 12%, transparent));
-  border: 1px solid rgba(254, 255, 223, 0.2);
+      color-mix(in srgb, var(--aqua) 32%, transparent),
+      color-mix(in srgb, var(--lilac) 28%, transparent));
+  border: 1px solid rgba(255, 255, 255, 0.48);
   border-radius: 24px 24px 24px 10px;     /* droplet shape */
   box-shadow:
-    inset 0 1px 1px rgba(254, 255, 223, 0.3),
-    inset 0 -6px 14px rgba(10, 6, 20, 0.2),
-    0 6px 16px rgba(10, 6, 20, 0.25);
+    inset 0 1px 1px rgba(255, 255, 255, 0.72),
+    inset 0 -6px 14px rgba(120, 90, 160, 0.10),
+    0 6px 16px rgba(120, 90, 160, 0.12);
   transition: transform var(--ease-soft), box-shadow var(--ease-soft),
     border-color var(--ease-soft), background var(--ease-soft), opacity var(--ease-soft);
 }
@@ -409,8 +404,8 @@ select option {
   transform: translateY(-3px) scale(1.012);
   border-color: color-mix(in srgb, var(--glow) 70%, transparent);
   box-shadow:
-    inset 0 1px 1px rgba(254, 255, 223, 0.4),
-    inset 0 -6px 14px rgba(10, 6, 20, 0.18),
+    inset 0 1px 1px rgba(255, 255, 255, 0.96),
+    inset 0 -6px 14px rgba(120, 90, 160, 0.09),
     0 10px 26px color-mix(in srgb, var(--glow) 38%, transparent);
 }
 
@@ -436,7 +431,7 @@ select option {
   -webkit-appearance: none;
   appearance: none;
   background: radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.4), transparent 55%);
-  border: 2px solid color-mix(in srgb, var(--cream) 50%, transparent);
+  border: 2px solid color-mix(in srgb, var(--text) 50%, transparent);
   border-radius: 50%;
   transition: background var(--ease-soft), border-color var(--ease-soft),
     box-shadow var(--ease-soft), transform var(--ease-soft);
@@ -456,7 +451,7 @@ select option {
   left: 50%;
   width: 0.35rem;
   height: 0.7rem;
-  border: solid var(--bg);
+  border: solid #ffffff;
   border-width: 0 2.5px 2.5px 0;
   transform: translate(-50%, -50%) rotate(45deg) scale(0);
   transition: transform 0.45s var(--ease-elastic);
@@ -470,7 +465,7 @@ select option {
   transform: translate(-50%, -50%) rotate(45deg) scale(1);
 }
 
-/* Delete button (any button inside the list) */
+/* Delete button (any button inside the list): soft pink, glows red-pink on hover */
 .taskList button {
   flex: none;
   display: grid;
@@ -479,16 +474,16 @@ select option {
   height: 2.1rem;
   padding: 0 0.6rem;
   line-height: 1;
-  color: color-mix(in srgb, var(--cream) 80%, transparent);
-  background: rgba(254, 255, 223, 0.06);
-  border: 1px solid rgba(254, 255, 223, 0.18);
+  color: var(--rose);
+  background: color-mix(in srgb, var(--pink) 35%, transparent);
+  border: 1px solid color-mix(in srgb, var(--pink) 80%, transparent);
   border-radius: var(--radius-pill);
 }
 .taskList button:hover {
-  color: var(--bg);
-  background: var(--peach);
-  border-color: var(--peach);
-  box-shadow: 0 0 18px color-mix(in srgb, var(--peach) 60%, transparent);
+  color: #ffffff;
+  background: linear-gradient(135deg, #ff9db3, var(--rose));
+  border-color: var(--rose);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--rose) 55%, transparent);
   transform: scale(1.08);
 }
 .taskList button:active {
@@ -498,18 +493,18 @@ select option {
 /* ----- Completed state: add class "task-done" to the <li> ----- */
 .taskList li.task-done {
   background:
-    radial-gradient(circle at 18% 14%, rgba(255, 255, 255, 0.18), transparent 42%),
+    radial-gradient(circle at 18% 14%, rgba(255, 255, 255, 0.65), transparent 42%),
     linear-gradient(135deg,
       color-mix(in srgb, var(--green) 20%, transparent),
       color-mix(in srgb, var(--mint) 12%, transparent));
   border-color: color-mix(in srgb, var(--green) 55%, transparent);
   box-shadow:
-    inset 0 1px 1px rgba(254, 255, 223, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.72),
     0 6px 20px color-mix(in srgb, var(--green-bright) 20%, transparent);
 }
 .taskList li.task-done > span {
   background-size: 100% 2px;
-  color: color-mix(in srgb, var(--cream) 55%, transparent);
+  color: color-mix(in srgb, var(--text) 55%, transparent);
 }
 
 /* Pseudo-elements used for the sparkle + ripple (hidden by default) */
@@ -528,7 +523,7 @@ select option {
 .taskList li::after {                  /* sparkle burst */
   inset: -10px;
   background:
-    radial-gradient(circle at 8% 22%,  var(--cream) 0 2px, transparent 3px),
+    radial-gradient(circle at 8% 22%,  var(--rose) 0 2px, transparent 3px),
     radial-gradient(circle at 92% 18%, var(--aqua) 0 2.5px, transparent 3.5px),
     radial-gradient(circle at 18% 90%, var(--lilac) 0 2px, transparent 3px),
     radial-gradient(circle at 84% 86%, var(--peach) 0 2.5px, transparent 3.5px),
@@ -556,7 +551,7 @@ select option {
   animation: taskExit var(--exit-duration) cubic-bezier(0.4, 0, 0.7, 1) forwards;
 }
 .task-exit::before {
-  border-color: var(--aqua);
+  border-color: var(--rose);
   animation: rippleBurst var(--exit-duration) ease-out forwards;
 }
 .task-exit::after {
@@ -570,11 +565,11 @@ select option {
   padding: 2.5rem 1.5rem;
   text-align: center;
   font-size: 1.05rem;
-  color: color-mix(in srgb, var(--cream) 78%, transparent);
-  background: color-mix(in srgb, var(--bg) 40%, transparent);
+  color: color-mix(in srgb, var(--text) 78%, transparent);
+  background: rgba(255, 255, 255, 0.4);
   -webkit-backdrop-filter: blur(var(--glass-blur));
   backdrop-filter: blur(var(--glass-blur));
-  border: 1px dashed color-mix(in srgb, var(--cream) 30%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--text) 30%, transparent);
   border-radius: var(--radius-lg);
   box-shadow: var(--glass-highlight);
   animation: fadeUp 0.9s ease both;
