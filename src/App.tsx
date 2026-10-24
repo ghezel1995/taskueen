@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import TaskList from './components/TaskList';
 import useTasks from './hooks/useTasks';
 import './App.css';
+import CursorFollower from './components/cursor-follower/CursorFollower';
 
 type Filter = 'all' | 'active' | 'completed';
 type Theme = 'light' | 'dark';
@@ -15,9 +16,9 @@ function App() {
   const { tasks, handleAddTask, handleToggle, handleDelete } = useTasks();
 
   useEffect(() => {
-  document.documentElement.dataset.theme = theme; // <html data-theme="dark">
-  localStorage.setItem('taskueen-theme', theme);
-}, [theme]);
+    document.documentElement.dataset.theme = theme; // <html data-theme="dark">
+    localStorage.setItem('taskueen-theme', theme);
+  }, [theme]);
 
   //Handling the Filtering
   const visibleTasks = tasks.filter((t) => {
@@ -38,10 +39,20 @@ function App() {
       >
         <span key={theme}>{theme === 'light' ? '🌙' : '☀️'}</span>
       </button>
-      <header>
+      
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <header>
         <h1>👑 Taskueen</h1>
         <h6>Rule your day, one task at a time!</h6>
       </header>
+        <CursorFollower size={240} basePath='/animation' />
+      </div>
 
       <section className='taskInput'>
         <input
@@ -82,7 +93,9 @@ function App() {
           </section>
         </>
       ) : (
-        'There is no task to be done!'
+        <>
+          <p>There is no task to be done!</p>
+        </>
       )}
     </>
   );
