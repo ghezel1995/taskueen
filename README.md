@@ -44,16 +44,10 @@ Taskueen was built as a frontend engineering portfolio project to demonstrate cl
 
 ## 🖼️ Preview & Screenshots
 
-<!-- PLACEHOLDER: Add your application screenshots or demo GIFs below.
-     Recommended: Save your screenshots inside an `assets/` or `docs/` folder (e.g., `docs/preview-light.png` and `docs/preview-dark.png`)
-     and update the relative paths below. -->
-
 | Light Mode | Dark Mode |
 | :---: | :---: |
-| ![Taskueen Light Mode Preview](https://placehold.co/600x400/f1e8fb/4a3d63?text=Taskueen+Light+Mode+Preview) | ![Taskueen Dark Mode Preview](https://placehold.co/600x400/2a2438/feffdf?text=Taskueen+Dark+Mode+Preview) |
+| ![Taskueen Light Mode](public/light.png) | ![Taskueen Dark Mode](public/dark.png) |
 | *Soft pastel lilac aesthetic with translucent glass cards* | *Twilight palette with glowing accents and deep contrast* |
-
-> *Tip: Replace the placeholder images above with actual screenshots of your running application.*
 
 ---
 
@@ -235,8 +229,10 @@ taskueen/
 ├── public/
 │   ├── animation/
 │   │   └── frames/              # 9 directional WebP sprite frames for mascot
+│   ├── dark.png                 # Dark mode preview screenshot
 │   ├── favicon.svg              # SVG crown brand favicon
-│   └── icons.svg                # Reusable SVG vector symbols
+│   ├── icons.svg                # Reusable SVG vector symbols
+│   └── light.png                # Light mode preview screenshot
 ├── src/
 │   ├── components/
 │   │   ├── cursor-follower/
