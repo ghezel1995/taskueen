@@ -1,0 +1,27 @@
+.summary{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.total,
+.completed,
+.remaining{
+    width: 25%;
+    height: 20vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: rgba(255, 254, 254, 0.3);
+}
+.total:hover,
+.completed:hover,
+.remaining:hover{
+    background-color: rgba(255, 254, 254, 0.5);
+    box-shadow: 0 18px 50px rgba(196, 196, 196, 0.45);
+    cursor: pointer;
+}

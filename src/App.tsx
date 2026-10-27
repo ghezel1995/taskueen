@@ -3,8 +3,8 @@ import TaskList from './components/TaskList';
 import useTasks from './hooks/useTasks';
 import './App.css';
 import CursorFollower from './components/cursor-follower/CursorFollower';
-
-type Filter = 'all' | 'active' | 'completed';
+import Summary from './components/Summary';
+import type { Filter } from './types/task';
 type Theme = 'light' | 'dark';
 
 function App() {
@@ -72,7 +72,9 @@ function App() {
         >
           Add task
         </button>
+
       </section>
+      <Summary tasks={tasks} setFilter={setFilter} />
 
       {tasks.length > 0 ? (
         <>
